@@ -5,21 +5,14 @@ namespace Oro\Bundle\TestFrameworkBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
-use Oro\Bundle\TestFrameworkBundle\Model\ExtendTestActivity;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\UserBundle\Entity\User;
 
 /**
- * @ORM\Table(
- *     name="test_activity",
- *     indexes={@ORM\Index(name="idx_test_activity_owner_id", columns={"owner_id"})}
- * )
+ * @ORM\Table(name="test_user_ownership")
  * @ORM\Entity
  * @Config(
  *      defaultValues={
- *          "grouping"={
- *              "groups"={"activity"}
- *          },
  *          "security"={
  *              "type"="ACL",
  *              "group_name"="",
@@ -36,7 +29,7 @@ use Oro\Bundle\UserBundle\Entity\User;
  *      }
  * )
  */
-class TestActivity extends ExtendTestActivity implements TestFrameworkEntityInterface
+class TestEntityWithUserOwnership implements TestFrameworkEntityInterface
 {
     /**
      * @var integer
@@ -50,16 +43,9 @@ class TestActivity extends ExtendTestActivity implements TestFrameworkEntityInte
     /**
      * @var string
      *
-     * @ORM\Column(name="message", type="text")
+     * @ORM\Column(name="name", type="string", nullable=true)
      */
-    protected $message;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
-     */
-    protected $description;
+    protected $name;
 
     /**
      * @var Organization
@@ -87,7 +73,8 @@ class TestActivity extends ExtendTestActivity implements TestFrameworkEntityInte
 
     /**
      * @param int $id
-     * @return $this
+     *
+     * @return self
      */
     public function setId($id)
     {
@@ -99,37 +86,19 @@ class TestActivity extends ExtendTestActivity implements TestFrameworkEntityInte
     /**
      * @return string
      */
-    public function getMessage()
+    public function getName()
     {
-        return $this->message;
+        return $this->name;
     }
 
     /**
-     * @param string $message
-     * @return $this
+     * @param string $name
+     *
+     * @return self
      */
-    public function setMessage($message)
+    public function setName($name)
     {
-        $this->message = $message;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $description
-     * @return $this
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
+        $this->name = $name;
 
         return $this;
     }
@@ -144,7 +113,8 @@ class TestActivity extends ExtendTestActivity implements TestFrameworkEntityInte
 
     /**
      * @param Organization $organization
-     * @return $this
+     *
+     * @return self
      */
     public function setOrganization($organization)
     {
@@ -163,7 +133,8 @@ class TestActivity extends ExtendTestActivity implements TestFrameworkEntityInte
 
     /**
      * @param $owner
-     * @return $this
+     *
+     * @return self
      */
     public function setOwner($owner)
     {
