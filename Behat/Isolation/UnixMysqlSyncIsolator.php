@@ -7,15 +7,16 @@ use Oro\Bundle\TestFrameworkBundle\Behat\Isolation\Event\AfterIsolatedTestEvent;
 use Oro\Bundle\TestFrameworkBundle\Behat\Isolation\Event\BeforeIsolatedTestEvent;
 use Oro\Bundle\TestFrameworkBundle\Behat\Isolation\Event\BeforeStartTestsEvent;
 use Oro\Bundle\TestFrameworkBundle\Behat\Isolation\Event\RestoreStateEvent;
-use Symfony\Component\Console\Exception\RuntimeException;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Exception\RuntimeException;
 use Symfony\Component\Process\Process;
 
-class WindowsMysqlIsolator extends AbstractOsRelatedIsolator implements IsolatorInterface
+final class UnixMysqlSyncIsolator extends AbstractOsRelatedIsolator implements IsolatorInterface
 {
-    const TIMEOUT = 120;
+    const TIMEOUT = '240';
 
     /** @var string */
     protected $dbHost;
@@ -61,30 +62,6 @@ class WindowsMysqlIsolator extends AbstractOsRelatedIsolator implements Isolator
     }
 
     /** {@inheritdoc} */
-    public function isApplicable(ContainerInterface $container)
-    {
-        return
-            self::isApplicableOS()
-            && 'pdo_mysql' === $container->getParameter('database_driver');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'MySql Db';
-    }
-
-    /** {@inheritdoc} */
-    protected function getApplicableOs()
-    {
-        return [
-            AbstractOsRelatedIsolator::WINDOWS_OS,
-        ];
-    }
-
-    /** {@inheritdoc} */
     public function start(BeforeStartTestsEvent $event)
     {
         $event->writeln('<info>Dumping current application database</info>');
@@ -120,11 +97,15 @@ class WindowsMysqlIsolator extends AbstractOsRelatedIsolator implements Isolator
 
         $event->writeln('<info>Begin to restore the state of Db...</info>');
 
-        $event->writeln('<info>Drop Db</info>');
+        $event->writeln('<info>Drop/Create Db</info>');
         $this->dropDb();
-        $event->writeln('<info>Restore Db from dump</info>');
         $this->createDb();
+
+        $event->writeln('<info>Restore Db from dump</info>');
         $this->restoreDbFromDump();
+
+        $event->writeln('<info>Remove Db dump</info>');
+        unlink($this->dbDump);
 
         $event->writeln('<info>Db was restored from dump</info>');
     }
@@ -133,6 +114,127 @@ class WindowsMysqlIsolator extends AbstractOsRelatedIsolator implements Isolator
     public function isOutdatedState()
     {
         return is_file($this->dbDump);
+    }
+
+    /** {@inheritdoc} */
+    public function isApplicable(ContainerInterface $container)
+    {
+        return
+            $this->isApplicableOS()
+            && 'pdo_mysql' === $container->getParameter('database_driver');
+    }
+
+    /** {@inheritdoc} */
+    public function getName()
+    {
+        return "MySql DB";
+    }
+
+    /** {@inheritdoc} */
+    protected function makeDump()
+    {
+        $this->runProcess(sprintf(
+            'MYSQL_PWD=%s mysqldump -h %s -u %s %s > %s',
+            $this->dbPass,
+            $this->dbHost,
+            $this->dbUser,
+            $this->dbName,
+            $this->dbDump
+        ));
+    }
+
+    /** {@inheritdoc} */
+    protected function restoreDbFromDump()
+    {
+        $this->runProcess(sprintf(
+            'MYSQL_PWD=%s mysql -h %s -u %s %s < %s',
+            $this->dbPass,
+            $this->dbHost,
+            $this->dbUser,
+            $this->dbName,
+            $this->dbDump
+        ));
+    }
+
+    /** {@inheritdoc} */
+    protected function getApplicableOs()
+    {
+        return [
+            AbstractOsRelatedIsolator::LINUX_OS,
+            AbstractOsRelatedIsolator::MAC_OS,
+        ];
+    }
+
+    protected function createTempDb()
+    {
+        if ($this->isDbExists($this->dbTempName)) {
+            $this->dropTempDb();
+        }
+
+        $this->runProcess(sprintf(
+            'MYSQL_PWD=%s mysql -e "create database %s;" -h %s -u %s',
+            $this->dbPass,
+            $this->dbTempName,
+            $this->dbHost,
+            $this->dbUser
+        ));
+    }
+
+    protected function createDb()
+    {
+        if ($this->isDbExists($this->dbName)) {
+            $this->dropDb();
+        }
+
+        $this->runProcess(sprintf(
+            'MYSQL_PWD=%s mysql -e "create database %s;" -h %s -u %s',
+            $this->dbPass,
+            $this->dbName,
+            $this->dbHost,
+            $this->dbUser
+        ));
+    }
+
+    /**
+     * Rename temp database to current application database
+     */
+    protected function renameTempDb()
+    {
+        $this->restoreDbFromDumpProcess = $this->runProcess(sprintf(
+            'MYSQL_PWD=%s && for table in `mysql -h %s -u %s -s -N -e "use %s;show tables from %4$s;"`; '.
+            'do mysql -h %2$s -u %3$s -s -N -e "use %4$s;rename table %4$s.$table to %5$s.$table;"; done;',
+            $this->dbPass,
+            $this->dbHost,
+            $this->dbUser,
+            $this->dbTempName,
+            $this->dbName
+        ));
+    }
+
+    protected function dropDb()
+    {
+        if (!$this->isDbExists($this->dbName)) {
+            return;
+        }
+
+        $this->runProcess(sprintf(
+            'MYSQL_PWD=%s mysql -e "drop database %s;" -h %s -u %s',
+            $this->dbPass,
+            $this->dbName,
+            $this->dbHost,
+            $this->dbUser
+        ));
+    }
+
+    protected function dropTempDb()
+    {
+        $this->runProcess(sprintf(
+            'MYSQL_PWD=%s mysql -e "drop database %s;" -h %s -u %s',
+            $this->dbPass,
+            $this->dbTempName,
+            $this->dbHost,
+            $this->dbUser
+        ));
     }
 
     /**
@@ -154,70 +256,6 @@ class WindowsMysqlIsolator extends AbstractOsRelatedIsolator implements Isolator
         return $process;
     }
 
-    private function restoreDbFromDump()
-    {
-        if (false === is_file($this->dbDump)) {
-            throw new RuntimeException('You can restore DB state without dump');
-        }
-
-        $this->dropDb();
-        $this->createDb();
-        $this->runProcess(sprintf(
-            'SET MYSQL_PWD=%s& mysql -h %s -u %s %s < %s',
-            $this->dbPass,
-            $this->dbHost,
-            $this->dbUser,
-            $this->dbName,
-            $this->dbDump
-        ));
-    }
-
-    private function makeDump()
-    {
-        if (is_file($this->dbDump)) {
-            unlink($this->dbDump);
-        }
-
-        $this->runProcess(sprintf(
-            'SET MYSQL_PWD=%s& mysqldump -h %s -u %s %s > %s',
-            $this->dbPass,
-            $this->dbHost,
-            $this->dbUser,
-            $this->dbName,
-            $this->dbDump
-        ));
-    }
-
-    private function createDb()
-    {
-        if ($this->isDbExists($this->dbName)) {
-            $this->dropDb();
-        }
-
-        $this->runProcess(sprintf(
-            'SET MYSQL_PWD=%s& mysql -e "create database %s;" -h %s -u %s',
-            $this->dbPass,
-            $this->dbName,
-            $this->dbHost,
-            $this->dbUser
-        ));
-    }
-
-    private function dropDb()
-    {
-        if (!$this->isDbExists($this->dbName)) {
-            return;
-        }
-
-        $this->runProcess(sprintf(
-            'SET MYSQL_PWD=%s& mysql -e "drop database %s;" -h %s -u %s',
-            $this->dbPass,
-            $this->dbName,
-            $this->dbHost,
-            $this->dbUser
-        ));
-    }
-
     /**
      * @param string $dbName
      * @return bool
@@ -225,7 +263,7 @@ class WindowsMysqlIsolator extends AbstractOsRelatedIsolator implements Isolator
     private function isDbExists($dbName)
     {
         $process = $this->runProcess(sprintf(
-            'SET MYSQL_PWD=%s& mysql -e "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA '.
+            'MYSQL_PWD=%s mysql -e "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA '.
             'WHERE SCHEMA_NAME = \'%s\'" -h %s -u %s',
             $this->dbPass,
             $dbName,
