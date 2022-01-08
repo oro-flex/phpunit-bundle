@@ -6,10 +6,6 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\MessageQueueBundle\Tests\Functional\Environment\TestBufferedMessageProducer;
 use Oro\Bundle\NavigationBundle\Event\ResponseHashnavListener;
-use Oro\Bundle\PlatformBundle\Manager\OptionalListenerManager;
-use Oro\Bundle\SearchBundle\Tests\Functional\SearchExtensionTrait;
-use Oro\Bundle\SecurityBundle\Authentication\Token\UsernamePasswordOrganizationToken;
-use Oro\Bundle\SecurityBundle\Csrf\CsrfRequestManager;
 use Oro\Bundle\PhpUnitBundle\Test\DataFixtures\AliceFixtureFactory;
 use Oro\Bundle\PhpUnitBundle\Test\DataFixtures\AliceFixtureIdentifierResolver;
 use Oro\Bundle\PhpUnitBundle\Test\DataFixtures\Collection;
@@ -17,6 +13,10 @@ use Oro\Bundle\PhpUnitBundle\Test\DataFixtures\DataFixturesExecutor;
 use Oro\Bundle\PhpUnitBundle\Test\DataFixtures\DataFixturesLoader;
 use Oro\Bundle\PhpUnitBundle\Test\Event\DisableListenersForDataFixturesEvent;
 use Oro\Bundle\PhpUnitBundle\Test\Logger\TestEventsLoggerTrait;
+use Oro\Bundle\PlatformBundle\Manager\OptionalListenerManager;
+use Oro\Bundle\SearchBundle\Tests\Functional\SearchExtensionTrait;
+use Oro\Bundle\SecurityBundle\Authentication\Token\UsernamePasswordOrganizationToken;
+use Oro\Bundle\SecurityBundle\Csrf\CsrfRequestManager;
 use Oro\Bundle\UserBundle\Entity\AbstractUser;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Component\PhpUtils\ArrayUtil;
@@ -28,6 +28,7 @@ use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
@@ -56,17 +57,14 @@ abstract class WebTestCase extends BaseWebTestCase
      * This adds a transaction that will be performed before a test starts and is rolled back when a test ends.
      */
     protected const DB_ISOLATION_PER_TEST_ANNOTATION = 'dbIsolationPerTest';
-
     /**
      * Use to avoid transaction rollbacks with Connection::transactional and missing on conflict in Doctrine
      * SQLSTATE[25P02] current transaction is aborted, commands ignored until end of transaction block
      */
     protected const NEST_TRANSACTIONS_WITH_SAVEPOINTS = 'nestTransactionsWithSavepoints';
-
     /** Default WSSE credentials */
     protected const USER_NAME = 'admin';
     protected const USER_PASSWORD = 'admin_api_key';
-
     /**  Default user name and password */
     protected const AUTH_USER = 'admin@example.com';
     protected const AUTH_PW = 'admin';
@@ -319,7 +317,8 @@ abstract class WebTestCase extends BaseWebTestCase
      */
     protected function enableSearchListeners()
     {
-        if ($this->getContainer()->hasParameter('optional_search_listeners')) {
+        if ($this->getContainer()->hasParameter('optional_search_listeners')
+            && self::getContainer()->has('oro_platform.optional_listeners.manager')) {
             $optionalSearchListeners = $this->getContainer()->getParameter('optional_search_listeners');
             $this->getOptionalListenerManager()->enableListeners($optionalSearchListeners);
         }
@@ -330,8 +329,10 @@ abstract class WebTestCase extends BaseWebTestCase
      */
     protected function disableOptionalListeners(): void
     {
-        $manager = $this->getOptionalListenerManager();
-        $manager->disableListeners($manager->getListeners());
+        if (self::getContainer()->has('oro_platform.optional_listeners.manager')) {
+            $manager = $this->getOptionalListenerManager();
+            $manager->disableListeners($manager->getListeners());
+        }
     }
 
     protected function getOptionalListenerManager(): OptionalListenerManager
@@ -341,6 +342,7 @@ abstract class WebTestCase extends BaseWebTestCase
 
     /**
      * @param string $tokenId
+     *
      * @return CsrfToken
      */
     protected function getCsrfToken($tokenId): CsrfToken
@@ -402,7 +404,8 @@ abstract class WebTestCase extends BaseWebTestCase
     /**
      * Process and replace all references and functions to values
      *
-     * @param  array|string $data Can be path to yml template file or array
+     * @param array|string $data Can be path to yml template file or array
+     *
      * @return array|string
      */
     protected static function processTemplateData($data)
@@ -544,7 +547,7 @@ abstract class WebTestCase extends BaseWebTestCase
 
     /**
      * @param string[] $fixtures Each fixture can be a class name or a path to nelmio/alice file
-     * @param bool     $force    Load fixtures even if its was loaded
+     * @param bool $force Load fixtures even if its was loaded
      *
      * @link https://github.com/nelmio/alice
      */
@@ -639,8 +642,9 @@ abstract class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * @param array  $fixtures Existing references that will be filtered
-     * @param bool   $force    Load fixtures even if its was loaded
+     * @param array $fixtures Existing references that will be filtered
+     * @param bool $force Load fixtures even if its was loaded
+     *
      * @return array
      */
     protected function filterFixtures(array $fixtures, $force = false)
@@ -683,6 +687,7 @@ abstract class WebTestCase extends BaseWebTestCase
 
     /**
      * @param string $name
+     *
      * @return bool
      */
     protected function hasReference($name)
@@ -735,6 +740,7 @@ abstract class WebTestCase extends BaseWebTestCase
     {
         $service = $this->getContainer()->get($id);
         $class = get_class($service);
+
         return $this->getMockBuilder($class)->disableOriginalConstructor();
     }
 
@@ -799,13 +805,13 @@ abstract class WebTestCase extends BaseWebTestCase
     /**
      * Calls a URI with emulation of AJAX request.
      *
-     * @param string $method        The request method
-     * @param string $uri           The URI to fetch
-     * @param array  $parameters    The Request parameters
-     * @param array  $files         The files
-     * @param array  $server        The server parameters (HTTP headers are referenced with a HTTP_ prefix as PHP does)
-     * @param string $content       The raw body data
-     * @param bool   $changeHistory Whether to update the history or not
+     * @param string $method The request method
+     * @param string $uri The URI to fetch
+     * @param array $parameters The Request parameters
+     * @param array $files The files
+     * @param array $server The server parameters (HTTP headers are referenced with a HTTP_ prefix as PHP does)
+     * @param string $content The raw body data
+     * @param bool $changeHistory Whether to update the history or not
      *                              (only used internally for back(), forward(), and reload())
      *
      * @return Crawler
@@ -889,7 +895,7 @@ abstract class WebTestCase extends BaseWebTestCase
     public static function generateRandomString($length = 10)
     {
         $random = "";
-        mt_srand((double)microtime() * 1000000);
+        mt_srand((double) microtime() * 1000000);
         $char_list = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         $char_list .= "abcdefghijklmnopqrstuvwxyz";
         $char_list .= "1234567890_";
@@ -930,7 +936,7 @@ abstract class WebTestCase extends BaseWebTestCase
                 $digest,
                 $nonce,
                 $created
-            )
+            ),
         ];
 
         return $wsseHeader;
@@ -953,7 +959,7 @@ abstract class WebTestCase extends BaseWebTestCase
         return [
             'PHP_AUTH_USER' => $userName,
             'PHP_AUTH_PW' => $userPassword,
-            'HTTP_PHP_AUTH_ORGANIZATION' => $userOrganization
+            'HTTP_PHP_AUTH_ORGANIZATION' => $userOrganization,
         ];
     }
 
@@ -986,7 +992,7 @@ abstract class WebTestCase extends BaseWebTestCase
      */
     public static function jsonToArray($json)
     {
-        return (array)json_decode($json, true);
+        return (array) json_decode($json, true);
     }
 
     /**
@@ -1001,6 +1007,7 @@ abstract class WebTestCase extends BaseWebTestCase
     public static function getJsonResponseContent(Response $response, $statusCode, string $message = '')
     {
         self::assertJsonResponseStatusCodeEquals($response, $statusCode, $message);
+
         return self::jsonToArray($response->getContent());
     }
 
@@ -1123,8 +1130,8 @@ abstract class WebTestCase extends BaseWebTestCase
      * Asserts the given response header equals to the expected value.
      *
      * @param Response $response
-     * @param string   $headerName
-     * @param mixed    $expectedValue
+     * @param string $headerName
+     * @param mixed $expectedValue
      */
     protected static function assertResponseHeader(Response $response, string $headerName, string $expectedValue): void
     {
@@ -1177,6 +1184,7 @@ abstract class WebTestCase extends BaseWebTestCase
      *
      * @param array $source
      * @param array $target
+     *
      * @return array
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -1244,7 +1252,7 @@ abstract class WebTestCase extends BaseWebTestCase
             return $this->getCurrentDir() . DIRECTORY_SEPARATOR . $fileName;
         }
 
-        return $this->getCurrentDir() . DIRECTORY_SEPARATOR .  $folderName . DIRECTORY_SEPARATOR . $fileName;
+        return $this->getCurrentDir() . DIRECTORY_SEPARATOR . $folderName . DIRECTORY_SEPARATOR . $fileName;
     }
 
     /**
@@ -1289,6 +1297,28 @@ abstract class WebTestCase extends BaseWebTestCase
 
             $cookie = new Cookie($session->getName(), $session->getId());
             self::getClientInstance()->getCookieJar()->set($cookie);
+        }
+    }
+
+    /**
+     * Provides a dedicated test container with access to both public and private
+     * services. The container will not include private services that have been
+     * inlined or removed. Private services will be removed when they are not
+     * used by other services.
+     *
+     * Using this method is the best way to get a container from your test code.
+     */
+    protected static function getContainer(): ContainerInterface
+    {
+        if (!static::$booted) {
+            static::bootKernel();
+        }
+
+        try {
+            return self::$kernel->getContainer()->get('test.service_container');
+        } catch (ServiceNotFoundException $e) {
+            throw new \LogicException('Could not find service "test.service_container". Try updating the "framework.test" config to "true".',
+                0, $e);
         }
     }
 }

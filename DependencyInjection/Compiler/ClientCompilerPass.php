@@ -19,5 +19,10 @@ class ClientCompilerPass implements CompilerPassInterface
             $definition = $container->getDefinition(self::CLIENT_SERVICE);
             $definition->setClass(Client::class);
         }
+
+        if ($container->hasDefinition('logger')) {
+            $definition = $container->getDefinition('logger');
+            $definition->setPublic(true);
+        }
     }
 }

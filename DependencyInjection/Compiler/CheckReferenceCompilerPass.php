@@ -20,7 +20,10 @@ class CheckReferenceCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        foreach ($container->getDefinitions() as $definition) {
+        foreach ($container->getDefinitions() as $name => $definition) {
+            if ($name === 'annotations.cached_reader') {
+                continue;
+            }
             $arguments = $definition->getArguments();
             if ($arguments) {
                 $this->checkArguments($container, $definition, '__construct', $arguments);
@@ -84,12 +87,12 @@ class CheckReferenceCompilerPass implements CompilerPassInterface
         }
 
         throw new \RuntimeException(sprintf(
-            'Service %s has definition of service %s as parameter in method %s. Should be %s instead of %s',
+            'Service %s has definition of service %s as parameter in method %s. Should be %s instead of %s for %s',
             $definition->getClass(),
             $argument->getClass(),
             $method,
             Reference::class,
-            Definition::class
+            Definition::class,
         ));
     }
 }

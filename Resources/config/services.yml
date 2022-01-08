@@ -23,36 +23,7 @@ services:
         decorates: nelmio_alice.property_accessor
         decoration_priority: -10
         arguments:
-            - '@.inner'
-
-    oro_test.provider.exclusion_provider:
-        class: Oro\Bundle\PhpUnitBundle\Provider\EntityExclusionProvider
-
-    oro_test.entity_field_list_provider:
-        class: Oro\Bundle\EntityBundle\Provider\EntityWithFieldsProvider
-        arguments:
-            - '@oro_test.entity_field_provider'
-            - '@oro_test.entity_provider'
-            - '@oro_entity_config.config_manager'
-
-    oro_test.entity_field_provider:
-        parent: oro_entity.entity_field_provider
-        public: true
-        calls:
-            - [setExclusionProvider, ['@oro_test.provider.exclusion_provider']]
-
-    oro_test.entity_provider:
-        parent: oro_entity.entity_provider
-        public: true
-        calls:
-            - [setExclusionProvider, ['@oro_test.provider.exclusion_provider']]
-
-    oro_test.event_listener.update_user_command:
-        class: Oro\Bundle\PhpUnitBundle\EventListener\UpdateUserCommandEventListener
-        arguments:
-            - '@oro_user.manager'
-        tags:
-            - { name: kernel.event_listener, event: console.terminate, method: onConsoleTerminate }
+            - '@oro_test.fixtures.reflection_property_accessor.inner'
 
     oro_test.alice_file_parser.yaml:
         class: Oro\Bundle\PhpUnitBundle\Test\DataFixtures\AliceYamlParser
@@ -103,46 +74,10 @@ services:
         class: Doctrine\Common\Collections\ArrayCollection
         factory: ['@oro_test.alice_fixture_loader', getReferenceRepository]
 
-    oro_config.cache:
-        parent: oro_cache.array_cache
-        public: true
-        calls:
-            - [setNamespace, [ 'oro_config' ] ]
-
-    oro_embedded_form.csrf_token_cache:
-        class: Symfony\Component\Cache\Adapter\ArrayAdapter
-        arguments:
-            - '%oro_embedded_form.csrf_token_lifetime%'
-
-    oro_wsse_authentication.nonce_cache:
-        abstract: true
-        class: Symfony\Component\Cache\Adapter\ArrayAdapter
-        arguments:
-            - '<lifetime>' # set in WsseNonceCachePass
-
-    oro_test.transport_provider:
-        class: Oro\Bundle\PhpUnitBundle\Provider\TestTransportProvider
-        tags:
-            - { name: oro_integration.transport, type: aType, channel_type: aType }
-
-    oro_test.entity_alias_loader:
-        alias: oro_entity.entity_alias_loader
-
     oro_test.provider.container_tags_documentation_information:
         class: Oro\Bundle\PhpUnitBundle\Provider\ContainerTagsDocumentationInformationProvider
         arguments:
             - '%kernel.project_dir%/'
 
-    oro_search.extension.mass_action.iterable_result_factory.alias:
-        alias: oro_search.extension.mass_action.iterable_result_factory
-
-    oro_datagrid.extension.mass_action.iterable_result_factory.alias:
-        alias: oro_datagrid.extension.mass_action.iterable_result_factory
-
     twig.form.renderer.alias:
         alias: twig.form.renderer
-
-    oro_test.layout.data_provider.test:
-        class: 'Oro\Bundle\PhpUnitBundle\Layout\TestProvider'
-        tags:
-            - { name: layout.data_provider, alias: test }
