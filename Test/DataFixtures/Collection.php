@@ -6,7 +6,7 @@
  * (c) Nelmio <hello@nelm.io>
  */
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\DataFixtures;
+namespace Oro\Bundle\PhpUnitBundle\Test\DataFixtures;
 
 use Doctrine\Common\Collections\ArrayCollection;
 

@@ -1,14 +1,14 @@
 oro_item:
-    resource:     "@OroTestFrameworkBundle/Controller/ItemController.php"
+    resource:     "@OroPhpUnitBundle/Controller/ItemController.php"
     type:         annotation
     prefix:       /test/item
 
 oro_item_value:
-    resource:     "@OroTestFrameworkBundle/Controller/ItemValueController.php"
+    resource:     "@OroPhpUnitBundle/Controller/ItemValueController.php"
     type:         annotation
     prefix:       /test/item-value
 
 oro_workflow_aware_entity:
-    resource:     "@OroTestFrameworkBundle/Controller/WorkflowAwareEntityController.php"
+    resource:     "@OroPhpUnitBundle/Controller/WorkflowAwareEntityController.php"
     type:         annotation
     prefix:       /test/wfa

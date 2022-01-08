@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\Persister;
+namespace Oro\Bundle\PhpUnitBundle\Test\DataFixtures\Persister;
 
 use Doctrine\ORM\Id\AssignedGenerator as ORMAssignedGenerator;
 use Doctrine\ORM\Mapping\ClassMetadataInfo as ORMClassMetadataInfo;

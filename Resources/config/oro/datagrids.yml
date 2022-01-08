@@ -11,7 +11,7 @@ datagrids:
                     - item.id
                     - item.stringValue
                 from:
-                    - { table: Oro\Bundle\TestFrameworkBundle\Entity\Item, alias: item }
+                    - { table: Oro\Bundle\PhpUnitBundle\Entity\Item, alias: item }
         columns:
             id:
                 label: id
@@ -27,7 +27,7 @@ datagrids:
                 select:
                     - itemValue.id
                 from:
-                    - { table: Oro\Bundle\TestFrameworkBundle\Entity\ItemValue, alias: itemValue }
+                    - { table: Oro\Bundle\PhpUnitBundle\Entity\ItemValue, alias: itemValue }
         columns:
             id:
                 label: id
@@ -40,7 +40,7 @@ datagrids:
                     - item.id
                     - item.name
                 from:
-                    - { table: Oro\Bundle\TestFrameworkBundle\Entity\TestEntityWithUserOwnership, alias: item }
+                    - { table: Oro\Bundle\PhpUnitBundle\Entity\TestEntityWithUserOwnership, alias: item }
         columns:
             id:
                 label: id
@@ -55,7 +55,7 @@ datagrids:
                 select:
                     - item.name
                 from:
-                    - { table: Oro\Bundle\TestFrameworkBundle\Entity\TestEntityWithUserOwnership, alias: item }
+                    - { table: Oro\Bundle\PhpUnitBundle\Entity\TestEntityWithUserOwnership, alias: item }
         columns:
             name:
                 label: name
@@ -96,7 +96,7 @@ datagrids:
                     - item.id
                     - item.stringValue
                 from:
-                    - { table: Oro\Bundle\TestFrameworkBundle\Entity\Item, alias: item }
+                    - { table: Oro\Bundle\PhpUnitBundle\Entity\Item, alias: item }
         columns:
             id:
                 label: id

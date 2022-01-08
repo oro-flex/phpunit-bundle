@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\DataFixtures;
+namespace Oro\Bundle\PhpUnitBundle\Test\DataFixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\DataFixtures\Exception\CircularReferenceException;

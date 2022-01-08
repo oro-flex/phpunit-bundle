@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\Logger;
+namespace Oro\Bundle\PhpUnitBundle\Test\Logger;
 
 use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Log\LogLevel;

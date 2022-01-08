@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\DependencyInjection;
+namespace Oro\Bundle\PhpUnitBundle\Test\DependencyInjection;
 
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\MockObject;

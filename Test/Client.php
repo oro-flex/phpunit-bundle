@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test;
+namespace Oro\Bundle\PhpUnitBundle\Test;
 
 use Oro\Bundle\DataGridBundle\Datagrid\Manager;
 use Oro\Bundle\DataGridBundle\Exception\UserInputErrorExceptionInterface;

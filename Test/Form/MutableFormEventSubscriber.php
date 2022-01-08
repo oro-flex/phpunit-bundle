@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\Form;
+namespace Oro\Bundle\PhpUnitBundle\Test\Form;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -48,7 +48,7 @@ class MutableFormEventSubscriber implements EventSubscriberInterface
         }
 
         return call_user_func_array(
-            array($this->wrapped, $method),
+            [$this->wrapped, $method],
             $args
         );
     }

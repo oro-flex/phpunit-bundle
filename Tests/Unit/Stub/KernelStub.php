@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Tests\Unit\Stub;
+namespace Oro\Bundle\PhpUnitBundle\Tests\Unit\Stub;
 
 use Oro\Bundle\DistributionBundle\OroKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test;
+namespace Oro\Bundle\PhpUnitBundle\Test;
 
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,13 +10,13 @@ use Oro\Bundle\PlatformBundle\Manager\OptionalListenerManager;
 use Oro\Bundle\SearchBundle\Tests\Functional\SearchExtensionTrait;
 use Oro\Bundle\SecurityBundle\Authentication\Token\UsernamePasswordOrganizationToken;
 use Oro\Bundle\SecurityBundle\Csrf\CsrfRequestManager;
-use Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\AliceFixtureFactory;
-use Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\AliceFixtureIdentifierResolver;
-use Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\Collection;
-use Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\DataFixturesExecutor;
-use Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\DataFixturesLoader;
-use Oro\Bundle\TestFrameworkBundle\Test\Event\DisableListenersForDataFixturesEvent;
-use Oro\Bundle\TestFrameworkBundle\Test\Logger\TestEventsLoggerTrait;
+use Oro\Bundle\PhpUnitBundle\Test\DataFixtures\AliceFixtureFactory;
+use Oro\Bundle\PhpUnitBundle\Test\DataFixtures\AliceFixtureIdentifierResolver;
+use Oro\Bundle\PhpUnitBundle\Test\DataFixtures\Collection;
+use Oro\Bundle\PhpUnitBundle\Test\DataFixtures\DataFixturesExecutor;
+use Oro\Bundle\PhpUnitBundle\Test\DataFixtures\DataFixturesLoader;
+use Oro\Bundle\PhpUnitBundle\Test\Event\DisableListenersForDataFixturesEvent;
+use Oro\Bundle\PhpUnitBundle\Test\Logger\TestEventsLoggerTrait;
 use Oro\Bundle\UserBundle\Entity\AbstractUser;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Component\PhpUtils\ArrayUtil;

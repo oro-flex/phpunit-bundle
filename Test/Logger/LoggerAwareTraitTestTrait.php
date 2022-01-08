@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\Logger;
+namespace Oro\Bundle\PhpUnitBundle\Test\Logger;
 
 use Oro\Component\Testing\ReflectionUtil;
 use Psr\Log\LoggerAwareInterface;

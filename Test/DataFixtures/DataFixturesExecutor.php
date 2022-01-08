@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\DataFixtures;
+namespace Oro\Bundle\PhpUnitBundle\Test\DataFixtures;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
@@ -10,7 +10,7 @@ use Doctrine\Persistence\ObjectManager;
 
 /**
  * This ORM executor does not clear the entity manager if a data fixture
- * implements \Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\InitialFixtureInterface
+ * implements \Oro\Bundle\PhpUnitBundle\Test\DataFixtures\InitialFixtureInterface
  * or Alice fixture have 'initial' parameter with 'true' value.
  */
 class DataFixturesExecutor extends ORMExecutor

@@ -1,5 +1,5 @@
 oro_entity:
     entity_aliases:
-        Oro\Bundle\TestFrameworkBundle\Entity\TestActivity:
+        Oro\Bundle\PhpUnitBundle\Entity\TestActivity:
             alias:        testactivity
             plural_alias: testactivities

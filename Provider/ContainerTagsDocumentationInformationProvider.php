@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Provider;
+namespace Oro\Bundle\PhpUnitBundle\Provider;
 
 use Symfony\Component\Finder\Finder;
 

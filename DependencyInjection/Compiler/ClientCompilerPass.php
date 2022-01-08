@@ -1,8 +1,8 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\DependencyInjection\Compiler;
+namespace Oro\Bundle\PhpUnitBundle\DependencyInjection\Compiler;
 
-use Oro\Bundle\TestFrameworkBundle\Test\Client;
+use Oro\Bundle\PhpUnitBundle\Test\Client;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 

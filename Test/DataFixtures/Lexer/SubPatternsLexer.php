@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\Lexer;
+namespace Oro\Bundle\PhpUnitBundle\Test\DataFixtures\Lexer;
 
 use Nelmio\Alice\FixtureBuilder\ExpressionLanguage\LexerInterface;
 use Nelmio\Alice\FixtureBuilder\ExpressionLanguage\Token;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\DateTime;
+namespace Oro\Bundle\PhpUnitBundle\Test\DateTime;
 
 trait TrimMicrosecondsTrait
 {

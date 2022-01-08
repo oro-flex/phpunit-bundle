@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\EventListener;
+namespace Oro\Bundle\PhpUnitBundle\EventListener;
 
 use Oro\Bundle\UserBundle\Command\UpdateUserCommand;
 use Oro\Bundle\UserBundle\Entity\User;

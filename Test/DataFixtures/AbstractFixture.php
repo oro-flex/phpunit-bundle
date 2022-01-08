@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\DataFixtures;
+namespace Oro\Bundle\PhpUnitBundle\Test\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture as BaseAbstractFixture;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;

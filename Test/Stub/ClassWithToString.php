@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\Stub;
+namespace Oro\Bundle\PhpUnitBundle\Test\Stub;
 
 class ClassWithToString
 {

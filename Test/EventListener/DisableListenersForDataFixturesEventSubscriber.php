@@ -1,14 +1,14 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\EventListener;
+namespace Oro\Bundle\PhpUnitBundle\Test\EventListener;
 
-use Oro\Bundle\TestFrameworkBundle\Test\Event\DisableListenersForDataFixturesEvent;
+use Oro\Bundle\PhpUnitBundle\Test\Event\DisableListenersForDataFixturesEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * The subscriber that can be used to add event listener(s) that should be disabled
  * during loading of data fixtures for functional tests.
- * @see \Oro\Bundle\TestFrameworkBundle\Test\WebTestCase::getListenersThatShouldBeDisabledDuringDataFixturesLoading
+ * @see \Oro\Bundle\PhpUnitBundle\Test\WebTestCase::getListenersThatShouldBeDisabledDuringDataFixturesLoading
  */
 class DisableListenersForDataFixturesEventSubscriber implements EventSubscriberInterface
 {

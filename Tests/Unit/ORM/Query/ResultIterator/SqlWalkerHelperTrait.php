@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Tests\Unit\ORM\Query\ResultIterator;
+namespace Oro\Bundle\PhpUnitBundle\Tests\Unit\ORM\Query\ResultIterator;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\AST\FromClause;

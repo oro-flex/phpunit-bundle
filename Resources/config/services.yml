@@ -7,13 +7,13 @@ services:
         public: true
 
     fidry_alice_data_fixtures.persistence.persister.doctrine.object_manager_persister:
-        class: Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\Persister\ObjectManagerPersister
+        class: Oro\Bundle\PhpUnitBundle\Test\DataFixtures\Persister\ObjectManagerPersister
         lazy: true
         arguments:
             - '@doctrine.orm.entity_manager'
 
     nelmio_alice.fixture_builder.expression_language.lexer.sub_patterns_lexer:
-        class: Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\Lexer\SubPatternsLexer
+        class: Oro\Bundle\PhpUnitBundle\Test\DataFixtures\Lexer\SubPatternsLexer
         arguments:
             - '@nelmio_alice.fixture_builder.expression_language.lexer.reference_lexer'
 
@@ -26,7 +26,7 @@ services:
             - '@.inner'
 
     oro_test.provider.exclusion_provider:
-        class: Oro\Bundle\TestFrameworkBundle\Provider\EntityExclusionProvider
+        class: Oro\Bundle\PhpUnitBundle\Provider\EntityExclusionProvider
 
     oro_test.entity_field_list_provider:
         class: Oro\Bundle\EntityBundle\Provider\EntityWithFieldsProvider
@@ -47,46 +47,32 @@ services:
         calls:
             - [setExclusionProvider, ['@oro_test.provider.exclusion_provider']]
 
-    oro_test.test_activity_activity_list.provider:
-        class: Oro\Bundle\TestFrameworkBundle\Provider\TestActivityActivityListProvider
-        arguments:
-           - '@oro_entity.doctrine_helper'
-           - '@oro_activity.association_helper'
-        tags:
-           - { name: oro_activity_list.provider, class: Oro\Bundle\TestFrameworkBundle\Entity\TestActivity }
-
-    oro_test.entity_alias_provider:
-        class: Oro\Bundle\TestFrameworkBundle\Provider\EntityAliasProvider
-        public: false
-        tags:
-            - { name: oro_entity.alias_provider }
-
     oro_test.event_listener.update_user_command:
-        class: Oro\Bundle\TestFrameworkBundle\EventListener\UpdateUserCommandEventListener
+        class: Oro\Bundle\PhpUnitBundle\EventListener\UpdateUserCommandEventListener
         arguments:
             - '@oro_user.manager'
         tags:
             - { name: kernel.event_listener, event: console.terminate, method: onConsoleTerminate }
 
     oro_test.alice_file_parser.yaml:
-        class: Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\AliceYamlParser
+        class: Oro\Bundle\PhpUnitBundle\Test\DataFixtures\AliceYamlParser
         decorates: nelmio_alice.file_parser.chainable.yaml
         arguments:
-            - '@.inner'
+            - '@oro_test.alice_file_parser.yaml.inner'
 
     oro_test.reference_resolver:
-        class: Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\Resolver\AliceReferenceResolver
+        class: Oro\Bundle\PhpUnitBundle\Test\DataFixtures\Resolver\AliceReferenceResolver
         public: false
         arguments:
             - '@doctrine'
 
     oro_test.value_resolver:
-        class: Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\Resolver\AliceToStringResolver
+        class: Oro\Bundle\PhpUnitBundle\Test\DataFixtures\Resolver\AliceToStringResolver
         arguments:
             - '@oro_test.reference_resolver'
 
     oro_test.fixture_loader.alice_combined_loader:
-        class: Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\Loader\AliceCombinedLoader
+        class: Oro\Bundle\PhpUnitBundle\Test\DataFixtures\Loader\AliceCombinedLoader
         lazy: true
         arguments:
             - '@nelmio_alice.files_loader.simple'
@@ -108,7 +94,7 @@ services:
             - 'no_purge'
 
     oro_test.alice_fixture_loader:
-        class: Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\AliceFixtureLoader
+        class: Oro\Bundle\PhpUnitBundle\Test\DataFixtures\AliceFixtureLoader
         arguments:
             - '@oro_test.fixture_loader.doctrine.purger_loader'
             - '@file_locator'
@@ -135,7 +121,7 @@ services:
             - '<lifetime>' # set in WsseNonceCachePass
 
     oro_test.transport_provider:
-        class: Oro\Bundle\TestFrameworkBundle\Provider\TestTransportProvider
+        class: Oro\Bundle\PhpUnitBundle\Provider\TestTransportProvider
         tags:
             - { name: oro_integration.transport, type: aType, channel_type: aType }
 
@@ -143,7 +129,7 @@ services:
         alias: oro_entity.entity_alias_loader
 
     oro_test.provider.container_tags_documentation_information:
-        class: Oro\Bundle\TestFrameworkBundle\Provider\ContainerTagsDocumentationInformationProvider
+        class: Oro\Bundle\PhpUnitBundle\Provider\ContainerTagsDocumentationInformationProvider
         arguments:
             - '%kernel.project_dir%/'
 
@@ -157,6 +143,6 @@ services:
         alias: twig.form.renderer
 
     oro_test.layout.data_provider.test:
-        class: 'Oro\Bundle\TestFrameworkBundle\Layout\TestProvider'
+        class: 'Oro\Bundle\PhpUnitBundle\Layout\TestProvider'
         tags:
             - { name: layout.data_provider, alias: test }

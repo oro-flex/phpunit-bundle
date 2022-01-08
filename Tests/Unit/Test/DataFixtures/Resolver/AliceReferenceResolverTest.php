@@ -1,13 +1,13 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Tests\Unit\Test\DataFixtures\Resolver;
+namespace Oro\Bundle\PhpUnitBundle\Tests\Unit\Test\DataFixtures\Resolver;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Proxy\Proxy;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\ClassMetadata;
-use Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\Collection;
-use Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\Resolver\AliceReferenceResolver;
+use Oro\Bundle\PhpUnitBundle\Test\DataFixtures\Collection;
+use Oro\Bundle\PhpUnitBundle\Test\DataFixtures\Resolver\AliceReferenceResolver;
 
 class AliceReferenceResolverTest extends \PHPUnit\Framework\TestCase
 {

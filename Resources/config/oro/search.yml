@@ -1,5 +1,5 @@
 search:
-    Oro\Bundle\TestFrameworkBundle\Entity\Item:
+    Oro\Bundle\PhpUnitBundle\Entity\Item:
         label:           Test Search Bundle Item
         alias:           oro_test_item
         search_template: '@OroSearch/Test/searchResult.html.twig'
@@ -39,14 +39,14 @@ search:
                 target_type: text
                 target_fields: [phone]
 
-    Oro\Bundle\TestFrameworkBundle\Entity\Item2:
+    Oro\Bundle\PhpUnitBundle\Entity\Item2:
         label:           Test Search Bundle Item2
         alias:           oro_test_item2
         search_template: '@OroSearch/Test/searchResult.html.twig'
         route:
             name: oro_search_results2
 
-    Oro\Bundle\TestFrameworkBundle\Entity\Product:
+    Oro\Bundle\PhpUnitBundle\Entity\Product:
         label: Test Search Bundle Product
         alias: oro_product_test
         title_fields: [name]

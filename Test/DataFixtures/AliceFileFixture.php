@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\DataFixtures;
+namespace Oro\Bundle\PhpUnitBundle\Test\DataFixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -48,7 +48,7 @@ class AliceFileFixture extends AliceFixture implements DependentFixtureInterface
      * will not clear the entity manager after this fixture.
      * This might be helpful if you need to load existing data to reference in nelmio/alice file.
      *
-     * @see \Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\DataFixturesExecutor
+     * @see \Oro\Bundle\PhpUnitBundle\Test\DataFixtures\DataFixturesExecutor
      *
      * @return bool
      */

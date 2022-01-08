@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\Resolver;
+namespace Oro\Bundle\PhpUnitBundle\Test\DataFixtures\Resolver;
 
 /**
  * Interface for the value resolvers.

@@ -1,6 +1,6 @@
 workflows:
     oro_test_workflow:
-        entity: Oro\Bundle\TestFrameworkBundle\Entity\Item
+        entity: Oro\Bundle\PhpUnitBundle\Entity\Item
 
         defaults: {active: true}
 

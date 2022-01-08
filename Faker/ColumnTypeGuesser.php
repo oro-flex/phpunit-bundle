@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Faker;
+namespace Oro\Bundle\PhpUnitBundle\Faker;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Faker\Generator;

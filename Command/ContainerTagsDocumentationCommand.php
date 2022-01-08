@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Oro\Bundle\TestFrameworkBundle\Command;
+namespace Oro\Bundle\PhpUnitBundle\Command;
 
-use Oro\Bundle\TestFrameworkBundle\Provider\ContainerTagsDocumentationInformationProvider;
+use Oro\Bundle\PhpUnitBundle\Provider\ContainerTagsDocumentationInformationProvider;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

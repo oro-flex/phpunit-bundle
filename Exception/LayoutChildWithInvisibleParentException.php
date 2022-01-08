@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Exception;
+namespace Oro\Bundle\PhpUnitBundle\Exception;
 
 /**
  * Tells that child node with invisible parent that must stay unprocessed, was processed.

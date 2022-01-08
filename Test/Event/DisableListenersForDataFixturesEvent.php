@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\Event;
+namespace Oro\Bundle\PhpUnitBundle\Test\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 

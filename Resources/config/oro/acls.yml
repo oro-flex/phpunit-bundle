@@ -5,11 +5,11 @@ acls:
 
     test_entity_view:
         type: entity
-        class: Oro\Bundle\TestFrameworkBundle\Entity\TestActivity
+        class: Oro\Bundle\PhpUnitBundle\Entity\TestActivity
         permission: VIEW
 
     test_entity_delete:
         type: entity
-        class: Oro\Bundle\TestFrameworkBundle\Entity\TestActivity
+        class: Oro\Bundle\PhpUnitBundle\Entity\TestActivity
         permission: DELETE
 

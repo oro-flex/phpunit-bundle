@@ -1,8 +1,8 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\Resolver;
+namespace Oro\Bundle\PhpUnitBundle\Test\DataFixtures\Resolver;
 
-use Oro\Bundle\TestFrameworkBundle\Test\DataFixtures\Collection;
+use Oro\Bundle\PhpUnitBundle\Test\DataFixtures\Collection;
 
 /**
  * Returns value casted to string.

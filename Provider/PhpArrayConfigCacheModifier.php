@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Provider;
+namespace Oro\Bundle\PhpUnitBundle\Provider;
 
 use Oro\Component\Config\Cache\PhpArrayConfigProvider;
 use Oro\Component\Config\Cache\PhpConfigCacheAccessor;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Oro\Bundle\TestFrameworkBundle\Tests\Unit\DependencyInjection\Compiler;
+namespace Oro\Bundle\PhpUnitBundle\Tests\Unit\DependencyInjection\Compiler;
 
-use Oro\Bundle\TestFrameworkBundle\DependencyInjection\Compiler\ClientCompilerPass;
-use Oro\Bundle\TestFrameworkBundle\Test\Client;
+use Oro\Bundle\PhpUnitBundle\DependencyInjection\Compiler\ClientCompilerPass;
+use Oro\Bundle\PhpUnitBundle\Test\Client;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ClientCompilerPassTest extends \PHPUnit\Framework\TestCase
